@@ -10,11 +10,11 @@ fileJoin <- function(...) {
 
 downloadToDataDir <- function(url, dest) {
   if(!file.exists(dataDir)) { dir.create(dataDir) }
-  download.file(uciHarUrl, uciHarZipfile, method="curl")
+  download.file(url, dest, method="curl")
 }
 
 extractUciHarFile <- function(filePath) {
-  fullFilePath <- paste("UCI\ HAR\ Dataset/", filePath, sep="")
+  fullFilePath <- fileJoin("UCI HAR Dataset", filePath)
   unz(uciHarZipfile, fullFilePath)
 }
 
@@ -38,7 +38,7 @@ loadUciHarData <- function(name) {
 }
 
 #
-# Some Constants
+# Constants
 #
 
 dataDir <- "./data"
@@ -70,7 +70,7 @@ allData <- merge(testData, trainningData, all=TRUE, sort=FALSE)
 meanAndStdCols <- grep("Activity|Subject|\\.mean\\.|\\.std\\.", colnames(allData))
 meanAndStdData <- allData[,meanAndStdCols]
 
-meanAndStdAverages <- ddply(meanAndStdData,.(Activity,Subject),colMeans)
+meanAndStdAverages <- ddply(meanAndStdData, .(Activity,Subject), colMeans)
 
 # Naming activities
 meanAndStdAverages$Activity <- as.factor(meanAndStdAverages$Activity)
